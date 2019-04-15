@@ -3,6 +3,7 @@ package com.server.somanager.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.eseo.ld.beans.Message;
 import fr.eseo.ld.beans.Sujet;
 import fr.eseo.ld.beans.Utilisateur;
 import fr.eseo.ld.dao.DAOFactory;
@@ -78,7 +80,45 @@ public class RestService {
 		return listeUtilisateur;
 	}
 	
-	///get/user/connect?identifiant=test&password=test
+	
+	 /**
+     * @Description  Connexion : Renvoie un message de succès ou d'échec 
+     * @Path  /get/user/connect?identifiant=test&password=test
+     * @Params  identifiant, password    identifiants de l'utilisateur qui cherche à se connecter
+     * @Result  (classe) Message : message de succès ou d'échec
+     */
+
+	@CrossOrigin
+	@RequestMapping(value = "/get/user/connect", method = RequestMethod.GET)
+	@ResponseBody
+	public Message connectUser(@RequestParam(required = true, value = "identifiant") String identifiant,@RequestParam(required = true, value = "password") String password) {
+		Message message = new Message();
+		List<Utilisateur> listeUtilisateur = new ArrayList<Utilisateur>();
+		this.utilisateurDao = daoFactory.getUtilisateurDao();
+		
+		/* Création de l'utilisateur avec l'identifiant entré en paramètre */
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setIdentifiant(identifiant);
+		
+		/* Recherche des informations relatives à l'utilisateur via son identifiant */
+		listeUtilisateur = utilisateurDao.trouver(utilisateur);
+		System.out.println("Liste users :"+ listeUtilisateur);
+		
+		if(listeUtilisateur.isEmpty()) {
+			message.setSuccess(false);
+			message.setMessage("Aucun utilisateur avec cet identifiant n'est présent dans la base de données");
+		}else {
+			if(BCrypt.checkpw(password, listeUtilisateur.get(0).getHash())){
+				message.setSuccess(true);
+				message.setMessage("Connexion réussie !");
+			}else {
+				message.setSuccess(false);
+				message.setMessage("Echec de connexion : mot de passe incorrect !");
+			}
+		}
+		
+		return message;
+	}
 	
 	 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
      * 										SUJETS 
@@ -106,7 +146,7 @@ public class RestService {
 	
 	/**
      * @Description : Renvoie les informations relatives à un sujet
-     * @Path : /get
+     * @Path : /get/sujetById?idSujet=
      * @params id l'id du sujet recherché
      * @return Liste<Sujet> liste contenant le sujet recherché
      */
@@ -115,19 +155,16 @@ public class RestService {
 	@RequestMapping(value = "/get/sujetById", method = RequestMethod.GET)
 	@ResponseBody
 	public Sujet getSujetById(@RequestParam(required = true, value = "idSujet") Long value) {
-
 		Sujet sujet = new Sujet();
-
 		this.sujetDao = daoFactory.getSujetDao();
-		
-		System.out.println("Valeur : "+ value);
 		sujet = sujetDao.trouver(value);
 		return sujet;
 	}
 	
 	// ###########################################################################################
-	// #                     Méthodes  
+	// #                     Autres  
 	// ###########################################################################################
 
+	
 
 }

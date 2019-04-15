@@ -1,11 +1,13 @@
 package fr.eseo.ld.dao;
 
 import static fr.eseo.ld.dao.DAOUtilitaire.fermetures;
+import static fr.eseo.ld.dao.DAOUtilitaire.initialisationRequetePreparee;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,10 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String ATTRIBUT_EMAIL = "email";
 	private static final String ATTRIBUT_VALIDE = "valide";
 	private static final String ATTRIBUT_ID_UTILISATEUR = "idUtilisateur";
+	private static final String[] ATTRIBUTS_NOMS = { ATTRIBUT_ID_UTILISATEUR, ATTRIBUT_NOM, ATTRIBUT_PRENOM,
+			ATTRIBUT_IDENTIFIANT, ATTRIBUT_HASH, ATTRIBUT_EMAIL, ATTRIBUT_VALIDE };
+	/* Noms des entités */ 
+	private static final String NOM_ENTITE = "Utilisateur";
 	
 	/* Requetes SQL pour Utilisateur */
 	private static final String SQL_SELECT_UTILISATEUR = "SELECT idUtilisateur, nom, prenom, identifiant, hash, email, valide FROM Utilisateur ORDER BY idUtilisateur";
@@ -73,6 +79,43 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			}
 		} catch (SQLException e) {
 			logger.log(Level.FATAL, "Échec du listage des objets.", e);
+		} finally {
+			// fermeture des ressources utilisées
+			fermetures(resultSet, preparedStatement, connection);
+		}
+		return utilisateurs;
+	}
+	
+	/**
+	 * Liste tous les Utilisateurs ayant pour attributs les mêmes que ceux
+	 * spécifiés dans un bean Utilisateur.
+	 * 
+	 * @param utilisateur l'Utilisateur que l'on souhaite trouver dans la BDD.
+	 * @return utilisateurs la liste des Utilisateurs trouvés dans la BDD.
+	 */ 
+	@Override
+	public List<Utilisateur> trouver(Utilisateur utilisateur) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Utilisateur> utilisateurs = new ArrayList<>();
+		// tableau de Strings regroupant tous les noms des attributs d'un objet ainsi que les valeurs correspondantes
+		String[][] attributs = { ATTRIBUTS_NOMS,
+				{ String.valueOf(utilisateur.getIdUtilisateur()), utilisateur.getNom(), utilisateur.getPrenom(),
+						utilisateur.getIdentifiant(), utilisateur.getHash(), utilisateur.getEmail(),
+						String.valueOf(utilisateur.getValide()) } };
+		try {
+			// création d'une connexion grâce à la DAOFactory placée en attribut de la classe
+			connection = this.creerConnexion();
+			// mise en forme de la requête SELECT en fonction des attributs de l'objet utilisateur
+			preparedStatement = connection.prepareStatement(initialisationRequetePreparee("SELECT * FROM Utilisateur WHERE identifiant=?", utilisateur.getIdentifiant()), Statement.NO_GENERATED_KEYS);
+			resultSet = preparedStatement.executeQuery();
+			// récupération des valeurs des attributs de la BDD pour les mettre dans une liste
+			while (resultSet.next()) {
+				utilisateurs.add(recupererUtilisateur(resultSet));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARN, "Échec de la recherche de l'objet.", e);
 		} finally {
 			// fermeture des ressources utilisées
 			fermetures(resultSet, preparedStatement, connection);
