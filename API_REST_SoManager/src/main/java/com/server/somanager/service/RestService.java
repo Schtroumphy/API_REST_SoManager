@@ -165,6 +165,16 @@ public class RestService {
 	// #                     Autres  
 	// ###########################################################################################
 
-	
-
+	/**
+	 * @Description : Permet à un professeur membre d’un jury de récupérer les infos sur tous les projets concernés par un jury.
+	 * @Path 
+	 * @Params : id l'id du membre du jury, l'idJury l'id du jury dont on veut avoir les informations sur les projets le concernant 
+	 * @return : Liste<Sujet> contenant les informations de tous les projets d'un jury
+	 */
+	public Sujet getSujetByIdJury(@RequestParam(required = true, value = "idSujet") Long value) {
+		Sujet sujet = new Sujet();
+		this.sujetDao = daoFactory.getSujetDao();
+		sujet = sujetDao.trouver(value);
+		return sujet;
+	}
 }
