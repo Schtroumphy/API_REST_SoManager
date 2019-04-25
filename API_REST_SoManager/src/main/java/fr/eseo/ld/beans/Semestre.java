@@ -22,7 +22,6 @@ public class Semestre {
 	
 	private static final String FORMAT_DATE = "yyyy-MM-dd";
 	
-	
 	/**
 	 * Constructeur par défaut.
 	 */
