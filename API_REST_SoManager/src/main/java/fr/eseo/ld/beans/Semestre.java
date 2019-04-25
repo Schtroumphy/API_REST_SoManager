@@ -20,7 +20,7 @@ public class Semestre {
 	private Date dateFin;
 	private String nom;
 	
-	private static final String FORMAT_DATE = "yyy-MM-dd";
+	private static final String FORMAT_DATE = "yyyy-MM-dd";
 	
 	/**
 	 * Constructeur par défaut.
