@@ -22,6 +22,7 @@ import fr.eseo.ld.beans.Sujet;
 import fr.eseo.ld.beans.Utilisateur;
 import fr.eseo.ld.dao.DAOFactory;
 import fr.eseo.ld.dao.JuryDAO;
+import fr.eseo.ld.dao.ProfesseurSujetDAO;
 import fr.eseo.ld.dao.SujetDAO;
 import fr.eseo.ld.dao.UtilisateurDAO;
 
@@ -44,6 +45,7 @@ public class RestService {
 	private UtilisateurDAO utilisateurDao;
 	private SujetDAO sujetDao;
 	private JuryDAO juryDao;
+	private ProfesseurSujetDAO professeurSujetDAO;
 	
 	private DAOFactory daoFactory = DAOFactory.getInstance();
     
@@ -162,6 +164,23 @@ public class RestService {
 		this.sujetDao = daoFactory.getSujetDao();
 		sujet = sujetDao.trouver(value);
 		return sujet;
+	}
+	
+	/**
+     * @Description : Renvoie les sujets concernant un professeur
+     * @Path : /get/sujetsByIdProfesseur?idProfesseur=
+     * @params id l'id du prof voulu
+     * @return Liste<Sujet> liste contenant le sujet recherché
+     */
+
+	@CrossOrigin
+	@RequestMapping(value = "/get/sujetsByIdProfesseur", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Sujet> getSujetByIdProfesseur(@RequestParam(required = true, value = "idProfesseur") int value) {
+		List<Sujet> sujets =  new ArrayList<Sujet>();
+		this.professeurSujetDAO = daoFactory.getProfesseurSujetDao();
+		sujets = professeurSujetDAO.listerSujets(value);
+		return sujets;
 	}
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

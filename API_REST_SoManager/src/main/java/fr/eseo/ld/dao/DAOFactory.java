@@ -90,4 +90,8 @@ public class DAOFactory {
     public JuryDAO getJuryDao() {
         return new JuryDAOImpl(this);
     }
+    
+    public ProfesseurSujetDAO getProfesseurSujetDao() {
+        return new ProfesseurSujetDAOImpl(this);
+    }
 }

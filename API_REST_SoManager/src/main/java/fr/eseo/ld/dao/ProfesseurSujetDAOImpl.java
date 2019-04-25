@@ -12,28 +12,22 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import fr.eseo.ld.beans.Epreuve;
-import fr.eseo.ld.beans.Equipe;
-import fr.eseo.ld.beans.Jury;
+import com.mysql.jdbc.Statement;
 
-public class JuryDAOImpl implements JuryDAO {
+import fr.eseo.ld.beans.Sujet;
 
-	/* Attributs de l'entité Sujet */
-	private static final String ATTRIBUT_ID_JURY = "idJury";
-	private static final String ATTRIBUT_ID_EPREUVE = "idEpreuve";
-	private static final String ATTRIBUT_ID_EQUIPE = "idEquipe";
-	private static final String ATTRIBUT_DATE = "date";
+public class ProfesseurSujetDAOImpl implements ProfesseurSujetDAO {
 
 	/* Requetes SQL */
-	private static final String SQL_SELECT_TOUT = "SELECT * FROM Jury";
+	private static final String SQL_SELECT_SUJETS = "SELECT * FROM sujet WHERE sujet.idSujet IN (SELECT idSujet from professeursujet where idProfesseur = ? )";
 
 	/* Logger */
-	private static Logger logger = Logger.getLogger(JuryDAO.class.getName());
+	private static Logger logger = Logger.getLogger(ProfesseurSujetDAO.class.getName());
 
 	/* Initialisation du DAO */
 	private DAOFactory daoFactory;
 
-	JuryDAOImpl(DAOFactory daoFactory) {
+	ProfesseurSujetDAOImpl(DAOFactory daoFactory) {
 		this.daoFactory = daoFactory;
 	}
 
@@ -43,32 +37,33 @@ public class JuryDAOImpl implements JuryDAO {
 	 * @return sujets la liste des Sujets présents dans la BDD.
 	 */
 	@Override
-	public List<Jury> lister() {
+	public List<Sujet> listerSujets(int value) {
+		System.out.println(value);
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		List<Jury> jurys = new ArrayList<>();
+		List<Sujet> sujets = new ArrayList<>();
 		try {
 			// cr�ation d'une connexion grâce à la DAOFactory plac�e en attribut de la
 			// classe
 			connection = this.creerConnexion();
-			preparedStatement = connection.prepareStatement(SQL_SELECT_TOUT);
+			preparedStatement = connection.prepareStatement(initialisationRequetePreparee(SQL_SELECT_SUJETS, value), Statement.RETURN_GENERATED_KEYS);
 			resultSet = preparedStatement.executeQuery();
 			// r�cup�ration des valeurs des attributs de la BDD pour les mettre dans une
 			// liste
 			resultSet.first();
-			jurys.add(recupererJury(resultSet));
+			sujets.add(recupererSujets(resultSet));
 			while (resultSet.next()) {
 				System.out.println("while");
-				jurys.add(recupererJury(resultSet));
+				sujets.add(recupererSujets(resultSet));
 			}
-			System.out.println("DAO : " + jurys);
+			System.out.println("DAO : " + sujets);
 		} catch (SQLException e) {
 			logger.log(Level.WARN, "Échec du listage des objets.", e);
 		} finally {
 			fermetures(resultSet, preparedStatement, connection);
 		}
-		return jurys;
+		return sujets;
 	}
 
 	// #################################################
@@ -93,23 +88,27 @@ public class JuryDAOImpl implements JuryDAO {
 	 * @return sujet le bean dont on souhaite faire la correspondance.
 	 * @throws SQLException
 	 */
-	public static Jury recupererJury(ResultSet resultSet) throws SQLException {
-		Epreuve epreuve = new Epreuve();
-		Equipe equipe = new Equipe();
-		
-		epreuve.setIdEpreuve(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
-		equipe.setIdEquipe(resultSet.getString(ATTRIBUT_ID_EQUIPE));
-		
-		Jury jury = new Jury();
-		jury.setIdJury(resultSet.getLong(ATTRIBUT_ID_JURY));
-		System.out.println(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
-//		jury.setIdEpreuve(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
-		jury.setEpreuve(epreuve);
-//		jury.setIdEquipe(resultSet.getString(ATTRIBUT_ID_EQUIPE));
-		jury.setEquipe(equipe);
-		jury.setDate(resultSet.getDate(ATTRIBUT_DATE));
-		System.out.println(jury);
-		return jury;
+	public static Sujet recupererSujets(ResultSet resultSet) throws SQLException {
+		return SujetDAOImpl.recupererSujet(resultSet);
 	}
+	
+	/**
+	 * Initialise une requête préparée.
+	 * 
+	 * @param connection la connexion à la BDD.
+	 * @param sql la requête SQL.
+	 * @param returnGeneratedKeys le boolean qui permet de générer des ID ou pas.
+	 * @param objets la liste d'objets à insérer dans la requête.
+	 * @return preparedStatement la requête préparée initialisée.
+	 * @throws SQLException
+	 */
+	protected static String initialisationRequetePreparee(String sql, Object... objets) {
+		String[] listeSQL = (sql+" ").split("\\?");
+		StringBuilder newSQL = new StringBuilder(listeSQL[0]);
+		for(int i = 0; i<objets.length; i++) {
+			newSQL.append("\"" + objets[i] + "\"" + listeSQL[i+1]);
+		}
+		return newSQL.toString().replaceAll("\"null\"", "null");
+	}	
 
 }
