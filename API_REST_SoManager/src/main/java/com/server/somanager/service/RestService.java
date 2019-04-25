@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.eseo.ld.beans.Jury;
 import fr.eseo.ld.beans.Message;
 import fr.eseo.ld.beans.Sujet;
 import fr.eseo.ld.beans.Utilisateur;
 import fr.eseo.ld.dao.DAOFactory;
+import fr.eseo.ld.dao.JuryDAO;
 import fr.eseo.ld.dao.SujetDAO;
 import fr.eseo.ld.dao.UtilisateurDAO;
 
@@ -41,6 +43,7 @@ public class RestService {
     
 	private UtilisateurDAO utilisateurDao;
 	private SujetDAO sujetDao;
+	private JuryDAO juryDao;
 	
 	private DAOFactory daoFactory = DAOFactory.getInstance();
     
@@ -159,6 +162,31 @@ public class RestService {
 		this.sujetDao = daoFactory.getSujetDao();
 		sujet = sujetDao.trouver(value);
 		return sujet;
+	}
+	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+     * 										JURYS 													 *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	
+	/**
+     * @Description  Renvoie la liste de tous les jurys
+     * @Path  /get
+     * @Params  none
+     * @Result  Liste<Jurys>
+     */
+
+	@CrossOrigin
+	@RequestMapping(value = "/get/jurys", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Jury> getJurys(@RequestParam(required = false, value = "value") String value) {
+		System.out.println("ici");
+		List<Jury> listeJury = new ArrayList<Jury>();
+		
+		this.juryDao = daoFactory.getJuryDao();
+		
+		listeJury = juryDao.lister();
+		System.out.println(listeJury);
+		return listeJury;
 	}
 	
 	// ###########################################################################################

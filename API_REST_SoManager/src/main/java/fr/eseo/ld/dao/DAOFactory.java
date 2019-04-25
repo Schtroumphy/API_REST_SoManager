@@ -86,4 +86,8 @@ public class DAOFactory {
     public SujetDAO getSujetDao() {
         return new SujetDAOImpl(this);
     }
+    
+    public JuryDAO getJuryDao() {
+        return new JuryDAOImpl(this);
+    }
 }
