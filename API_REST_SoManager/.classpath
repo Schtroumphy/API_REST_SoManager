@@ -29,5 +29,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/user/Desktop/ESEO/I2/S8/mysql-connector-java-8.0.15/mysql-connector-java-8.0.15.jar"/>
+	<classpathentry kind="lib" path="C:/Users/user/Desktop/ESEO/I2/S8/apache-jmeter-5.0/bin/ApacheJMeter.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

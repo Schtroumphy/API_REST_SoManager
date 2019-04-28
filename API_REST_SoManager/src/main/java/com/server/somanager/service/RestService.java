@@ -176,11 +176,19 @@ public class RestService {
 	@CrossOrigin
 	@RequestMapping(value = "/get/sujetsByIdProfesseur", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Sujet> getSujetByIdProfesseur(@RequestParam(required = true, value = "idProfesseur") int value) {
+	public Object getSujetByIdProfesseur(@RequestParam(required = true, value = "idProfesseur") int value) {
+		Message message = new Message();
 		List<Sujet> sujets =  new ArrayList<Sujet>();
 		this.professeurSujetDAO = daoFactory.getProfesseurSujetDao();
 		sujets = professeurSujetDAO.listerSujets(value);
-		return sujets;
+		if(sujets.isEmpty()) {
+			message.setSuccess(false);
+			message.setMessage("Aucun sujet correspondant à cet identifiant professeur n'est présent dans la base de données");
+			return message; 
+		}else {
+			return sujets;
+		}
+		//return sujets;
 	}
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -197,31 +205,24 @@ public class RestService {
 	@CrossOrigin
 	@RequestMapping(value = "/get/jurys", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Jury> getJurys(@RequestParam(required = false, value = "value") String value) {
-		System.out.println("ici");
+	public Object getJurys(@RequestParam(required = false, value = "value") String value) {
+		Message message = new Message();
 		List<Jury> listeJury = new ArrayList<Jury>();
-		
-		this.juryDao = daoFactory.getJuryDao();
-		
+		this.juryDao = daoFactory.getJuryDao();	
 		listeJury = juryDao.lister();
-		System.out.println(listeJury);
-		return listeJury;
+		if(listeJury.isEmpty()) {
+			message.setSuccess(false);
+			message.setMessage("Aucun sujet correspondant à cet identifiant professeur n'est présent dans la base de données");
+			return message; 
+		}else {
+			return listeJury;
+		}
+		//return listeJury;
 	}
 	
 	// ###########################################################################################
-	// #                     Autres  
+	// #                   					  Autres  
 	// ###########################################################################################
 
-	/**
-	 * @Description : Permet à un professeur membre d’un jury de récupérer les infos sur tous les projets concernés par un jury.
-	 * @Path 
-	 * @Params : id l'id du membre du jury, l'idJury l'id du jury dont on veut avoir les informations sur les projets le concernant 
-	 * @return : Liste<Sujet> contenant les informations de tous les projets d'un jury
-	 */
-	public Sujet getSujetByIdJury(@RequestParam(required = true, value = "idSujet") Long value) {
-		Sujet sujet = new Sujet();
-		this.sujetDao = daoFactory.getSujetDao();
-		sujet = sujetDao.trouver(value);
-		return sujet;
-	}
+
 }
