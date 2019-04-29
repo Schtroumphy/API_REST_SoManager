@@ -11,7 +11,7 @@ import fr.eseo.ld.config.DAOConfigurationException;
 public class DAOFactory {
 
     //private static final String FICHIER_PROPERTIES = "dao.properties";
-    private static String PROPERTY_URL = "jdbc:mysql://localhost/somanager?useLegacyDatetimeCode=false&serverTimezone=Europe/Paris";
+    private static String PROPERTY_URL = "jdbc:mysql://localhost/somanagergl?useLegacyDatetimeCode=false&serverTimezone=Europe/Paris";
     private static String PROPERTY_DRIVER = "com.mysql.jdbc.Driver";
     private static String PROPERTY_NOM_UTILISATEUR = "root";
     private static String PROPERTY_MOT_DE_PASSE = "";

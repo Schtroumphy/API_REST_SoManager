@@ -1,0 +1,49 @@
+2019-04-23 16:28:32,040 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2019-04-23 16:28:32,056 INFO o.a.j.JMeter: Loading user properties from: C:\Users\user\Desktop\ESEO\I2\S8\apache-jmeter-5.0\bin\user.properties
+2019-04-23 16:28:32,056 INFO o.a.j.JMeter: Loading system properties from: C:\Users\user\Desktop\ESEO\I2\S8\apache-jmeter-5.0\bin\system.properties
+2019-04-23 16:28:32,056 INFO o.a.j.JMeter: Loading additional properties from: C:\Users\user\git\API_REST_SoManager/jmeter/properties/user.properties
+2019-04-23 16:28:32,056 INFO o.a.j.JMeter: Setting System property: sun.java2d.xrender=false
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: Copyright (c) 1998-2018 The Apache Software Foundation
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: Version 5.0 r1840935
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: java.version=1.8.0_201
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: os.name=Windows 10
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: os.arch=amd64
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: os.version=10.0
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: file.encoding=Cp1252
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: Max memory     =1073741824
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: Available Processors =4
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: Default Locale=English (EN)
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: JMeterHome=C:\Users\user\Desktop\ESEO\I2\S8\apache-jmeter-5.0
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: user.dir  =C:\Users\user\git\API_REST_SoManager
+2019-04-23 16:28:32,071 INFO o.a.j.JMeter: PWD       =C:\Users\user\git\API_REST_SoManager
+2019-04-23 16:28:32,087 INFO o.a.j.JMeter: IP: 172.23.4.94 Name: DESKTOP-622I12E FullName: 172.23.4.94
+2019-04-23 16:28:32,087 INFO o.a.j.JMeter: search_paths=./bin/
+2019-04-23 16:28:32,087 INFO o.a.j.JMeter: Adding to classpath and loader: ./bin/
+2019-04-23 16:28:32,217 INFO o.a.j.g.a.LookAndFeelCommand: Installing Darcula LAF
+2019-04-23 16:28:32,232 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.bulenkov.darcula.DarculaLaf [Darcula]
+2019-04-23 16:28:32,232 INFO o.a.j.JMeter: Setting LAF to: com.bulenkov.darcula.DarculaLaf
+2019-04-23 16:28:32,295 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2019-04-23 16:28:32,779 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2019-04-23 16:28:32,779 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2019-04-23 16:28:33,576 INFO o.a.j.JMeter: Loading file: C:\Users\user\git\API_REST_SoManager\jmeter\plan_test-ex0-hello.jmx
+2019-04-23 16:28:33,576 INFO o.a.j.s.FileServer: Default base='C:\Users\user\git\API_REST_SoManager'
+2019-04-23 16:28:33,576 INFO o.a.j.s.FileServer: Set new base='C:\Users\user\git\API_REST_SoManager\jmeter'
+2019-04-23 16:28:33,874 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2019-04-23 16:28:33,894 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2019-04-23 16:28:33,896 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2019-04-23 16:28:33,900 INFO o.a.j.s.SaveService: Loading file: C:\Users\user\git\API_REST_SoManager\jmeter\plan_test-ex0-hello.jmx
+2019-04-23 16:28:33,958 INFO o.a.j.s.FileServer: Set new base='C:\Users\user\git\API_REST_SoManager\jmeter'
+2019-04-23 16:28:34,117 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2019-04-23 16:28:34,117 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2019-04-23 16:28:34,118 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2019-04-23 16:28:34,118 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2019-04-23 16:28:34,715 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-04-23 16:28:34,716 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-04-23 16:28:34,716 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-04-23 16:28:34,716 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-04-23 16:28:34,716 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2019-04-23 16:28:34,716 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2019-04-23 16:28:35,024 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2019-04-23 16:28:35,024 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file C:\Users\user\Desktop\ESEO\I2\S8\apache-jmeter-5.0\bin\proxyserver.jks
