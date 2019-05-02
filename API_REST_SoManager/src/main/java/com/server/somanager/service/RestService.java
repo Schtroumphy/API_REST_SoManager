@@ -173,12 +173,12 @@ public class RestService {
 			message.setMessage("Vous devez vous identifier pour accéder à cette requête");
 			return message;
 		} else {
-		List<Sujet> listeSujets = new ArrayList<Sujet>();
+			List<Sujet> listeSujets = new ArrayList<Sujet>();
 
-		this.sujetDao = daoFactory.getSujetDao();
+			this.sujetDao = daoFactory.getSujetDao();
 
-		listeSujets = sujetDao.lister();
-		return listeSujets;
+			listeSujets = sujetDao.lister();
+			return listeSujets;
 		}
 	}
 
@@ -192,12 +192,27 @@ public class RestService {
 	@CrossOrigin
 	@RequestMapping(value = "/get/sujetById", method = RequestMethod.GET)
 	@ResponseBody
-	public Sujet getSujetById(@RequestParam(required = true, value = "idSujet") Long value) {
-
-		Sujet sujet = new Sujet();
-		this.sujetDao = daoFactory.getSujetDao();
-		sujet = sujetDao.trouver(value);
-		return sujet;
+	public Object getSujetById(@RequestParam(required = true, value = "idSujet") Long value) {
+		Message message = new Message();
+		// Check the token
+		System.out.println("Token : " + tokenUser);
+		if (tokenUser == null) {
+			message.setSuccess(false);
+			message.setMessage("Vous devez vous identifier pour accéder à cette requête");
+			return message;
+		} else {
+			// Verifier si le token est valide
+			if (!verifyToken(tokenUser)) {
+				message.setSuccess(false);
+				message.setMessage("Token invalide ! Veuillez vous reconnecter");
+				return message;
+			} else {
+				Sujet sujet = new Sujet();
+				this.sujetDao = daoFactory.getSujetDao();
+				sujet = sujetDao.trouver(value);
+				return sujet;
+			}
+		}
 	}
 
 	/**
@@ -212,17 +227,34 @@ public class RestService {
 	@ResponseBody
 	public Object getSujetByIdProfesseur(@RequestParam(required = true, value = "idProfesseur") int value) {
 		Message message = new Message();
-		List<Sujet> sujets = new ArrayList<Sujet>();
-		this.professeurSujetDAO = daoFactory.getProfesseurSujetDao();
-		sujets = professeurSujetDAO.listerSujets(value);
-		if (sujets.isEmpty()) {
+		// Check the token
+		System.out.println("Token : " + tokenUser);
+		if (tokenUser == null) {
 			message.setSuccess(false);
-			message.setMessage(
-					"Aucun sujet correspondant à cet identifiant professeur n'est présent dans la base de données");
+			message.setMessage("Vous devez vous identifier pour accéder à cette requête");
 			return message;
 		} else {
-			return sujets;
+			// Verifier si le token est valide
+			if (!verifyToken(tokenUser)) {
+				message.setSuccess(false);
+				message.setMessage("Token invalide ! Veuillez vous reconnecter");
+				return message;
+			} else {
+				List<Sujet> sujets = new ArrayList<Sujet>();
+				this.professeurSujetDAO = daoFactory.getProfesseurSujetDao();
+				sujets = professeurSujetDAO.listerSujets(value);
+				if (sujets.isEmpty()) {
+					message.setSuccess(false);
+					message.setMessage(
+							"Aucun sujet correspondant à cet identifiant professeur n'est présent dans la base de données");
+					return message;
+				} else {
+					return sujets;
+				}
+			}
+
 		}
+
 	}
 
 	/*
@@ -232,7 +264,7 @@ public class RestService {
 	 */
 
 	/**
-	 * @Description Renvoie la liste de tous les jurys 
+	 * @Description Renvoie la liste de tous les jurys
 	 * @Path /get/jurys
 	 * @Params none
 	 * @Result Liste<Jurys>
@@ -241,7 +273,7 @@ public class RestService {
 	@CrossOrigin
 	@RequestMapping(value = "/get/jurys", method = RequestMethod.GET)
 	@ResponseBody
-	public Object getJurys(/*@RequestParam(required = false, value = "value") String value*/) {
+	public Object getJurys() {
 		Message message = new Message();
 		// Check the token
 		System.out.println("Token : " + tokenUser);
@@ -258,7 +290,7 @@ public class RestService {
 			} else {
 				JWTDecoder jwtDecod = new JWTDecoder(tokenUser);
 				System.out.println("JWTDecoder : " + jwtDecod.getClaim("identifiant"));
-				System.out.println("Expiration : "+ jwtDecod.getExpiresAt());
+				System.out.println("Expiration : " + jwtDecod.getExpiresAt());
 
 				List<Jury> listeJury = new ArrayList<Jury>();
 				this.juryDao = daoFactory.getJuryDao();
