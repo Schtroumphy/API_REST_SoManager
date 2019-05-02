@@ -6,5 +6,7 @@ import fr.eseo.ld.beans.Jury;
 
 public interface JuryDAO {
 	List<Jury> lister();
+	
+	List<Jury> trouver(Jury jury);
 
 }

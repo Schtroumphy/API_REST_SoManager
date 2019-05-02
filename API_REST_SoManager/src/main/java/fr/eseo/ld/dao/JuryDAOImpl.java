@@ -1,6 +1,7 @@
 package fr.eseo.ld.dao;
 
 import static fr.eseo.ld.dao.DAOUtilitaire.fermetures;
+import static fr.eseo.ld.dao.DAOUtilitaire.initialisationRequetePreparee;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import com.mysql.jdbc.Statement;
 
 import fr.eseo.ld.beans.Epreuve;
 import fr.eseo.ld.beans.Equipe;
@@ -23,6 +26,7 @@ public class JuryDAOImpl implements JuryDAO {
 	private static final String ATTRIBUT_ID_EPREUVE = "idEpreuve";
 	private static final String ATTRIBUT_ID_EQUIPE = "idEquipe";
 	private static final String ATTRIBUT_DATE = "date";
+	private static final String[] ATTRIBUTS_NOMS = { ATTRIBUT_ID_JURY /*, ATTRIBUT_ID_EPREUVE, ATTRIBUT_ID_EQUIPE, ATTRIBUT_DATE */};
 
 	/* Requetes SQL */
 	private static final String SQL_SELECT_TOUT = "SELECT * FROM Jury";
@@ -59,10 +63,10 @@ public class JuryDAOImpl implements JuryDAO {
 			resultSet.first();
 			jurys.add(recupererJury(resultSet));
 			while (resultSet.next()) {
-				System.out.println("while");
+				//System.out.println("while");
 				jurys.add(recupererJury(resultSet));
 			}
-			System.out.println("DAO : " + jurys);
+			//System.out.println("DAO : " + jurys);
 		} catch (SQLException e) {
 			logger.log(Level.WARN, "Échec du listage des objets.", e);
 		} finally {
@@ -70,6 +74,43 @@ public class JuryDAOImpl implements JuryDAO {
 		}
 		return jurys;
 	}
+	
+
+	/**
+	 * Liste tous les Jurys ayant pour attributs les mêmes que ceux sp�cifi�s dans un bean Jury.
+	 * 
+	 * @param etudiant l'Jury que l'on souhaite trouver dans la BDD.
+	 * @return etudiants la liste des Jurys trouv�s dans la BDD.
+	 */
+	@Override
+	public List<Jury> trouver(Jury jury) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Jury> jurys = new ArrayList<>();
+		// tableau de Strings regroupant tous les noms des attributs d'un objet ainsi que les valeurs correspondantes
+		String[][] attributs = { ATTRIBUTS_NOMS,
+				{ String.valueOf(jury.getIdJury()),
+			String.valueOf(jury.getEpreuve().getIdEpreuve()),String.valueOf(jury.getEquipe().getIdEquipe()), 
+			jury.getDateString() } };
+		try {
+			// cr�ation d'une connexion grâce à la DAOFactory plac�e en attribut de la classe
+			connection = this.creerConnexion();
+			// mise en forme de la requête SELECT en fonction des attributs de l'objet etudiant
+			//preparedStatement = connection.prepareStatement(initialisationRequetePreparee("SELECT", NOM_ENTITE, attributs, SQL_JOINTURES), Statement.NO_GENERATED_KEYS);
+			resultSet = preparedStatement.executeQuery();
+			// r�cup�ration des valeurs des attributs de la BDD pour les mettre dans une liste
+			while (resultSet.next()) {
+				jurys.add(recupererJury(resultSet));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.WARN, "Échec de la recherche de l'objet.", e);
+		} finally {
+			// fermeture des ressources utilis�es
+			fermetures(resultSet, preparedStatement, connection);
+		}
+		return jurys;
+	}	
 
 	// #################################################
 	// # M�thodes priv�es #
@@ -96,19 +137,17 @@ public class JuryDAOImpl implements JuryDAO {
 	public static Jury recupererJury(ResultSet resultSet) throws SQLException {
 		Epreuve epreuve = new Epreuve();
 		Equipe equipe = new Equipe();
-		
+
 		epreuve.setIdEpreuve(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
 		equipe.setIdEquipe(resultSet.getString(ATTRIBUT_ID_EQUIPE));
-		
+
 		Jury jury = new Jury();
 		jury.setIdJury(resultSet.getLong(ATTRIBUT_ID_JURY));
-		System.out.println(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
 //		jury.setIdEpreuve(resultSet.getLong(ATTRIBUT_ID_EPREUVE));
 		jury.setEpreuve(epreuve);
 //		jury.setIdEquipe(resultSet.getString(ATTRIBUT_ID_EQUIPE));
 		jury.setEquipe(equipe);
 		jury.setDate(resultSet.getDate(ATTRIBUT_DATE));
-		System.out.println(jury);
 		return jury;
 	}
 
