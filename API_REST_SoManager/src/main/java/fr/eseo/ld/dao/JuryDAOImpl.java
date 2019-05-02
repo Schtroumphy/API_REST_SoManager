@@ -26,7 +26,6 @@ public class JuryDAOImpl implements JuryDAO {
 	private static final String ATTRIBUT_ID_EPREUVE = "idEpreuve";
 	private static final String ATTRIBUT_ID_EQUIPE = "idEquipe";
 	private static final String ATTRIBUT_DATE = "date";
-	private static final String[] ATTRIBUTS_NOMS = { ATTRIBUT_ID_JURY /*, ATTRIBUT_ID_EPREUVE, ATTRIBUT_ID_EQUIPE, ATTRIBUT_DATE */};
 
 	/* Requetes SQL */
 	private static final String SQL_SELECT_TOUT = "SELECT * FROM Jury";
@@ -75,42 +74,6 @@ public class JuryDAOImpl implements JuryDAO {
 		return jurys;
 	}
 	
-
-	/**
-	 * Liste tous les Jurys ayant pour attributs les mêmes que ceux sp�cifi�s dans un bean Jury.
-	 * 
-	 * @param etudiant l'Jury que l'on souhaite trouver dans la BDD.
-	 * @return etudiants la liste des Jurys trouv�s dans la BDD.
-	 */
-	@Override
-	public List<Jury> trouver(Jury jury) {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		List<Jury> jurys = new ArrayList<>();
-		// tableau de Strings regroupant tous les noms des attributs d'un objet ainsi que les valeurs correspondantes
-		String[][] attributs = { ATTRIBUTS_NOMS,
-				{ String.valueOf(jury.getIdJury()),
-			String.valueOf(jury.getEpreuve().getIdEpreuve()),String.valueOf(jury.getEquipe().getIdEquipe()), 
-			jury.getDateString() } };
-		try {
-			// cr�ation d'une connexion grâce à la DAOFactory plac�e en attribut de la classe
-			connection = this.creerConnexion();
-			// mise en forme de la requête SELECT en fonction des attributs de l'objet etudiant
-			//preparedStatement = connection.prepareStatement(initialisationRequetePreparee("SELECT", NOM_ENTITE, attributs, SQL_JOINTURES), Statement.NO_GENERATED_KEYS);
-			resultSet = preparedStatement.executeQuery();
-			// r�cup�ration des valeurs des attributs de la BDD pour les mettre dans une liste
-			while (resultSet.next()) {
-				jurys.add(recupererJury(resultSet));
-			}
-		} catch (SQLException e) {
-			logger.log(Level.WARN, "Échec de la recherche de l'objet.", e);
-		} finally {
-			// fermeture des ressources utilis�es
-			fermetures(resultSet, preparedStatement, connection);
-		}
-		return jurys;
-	}	
 
 	// #################################################
 	// # M�thodes priv�es #
